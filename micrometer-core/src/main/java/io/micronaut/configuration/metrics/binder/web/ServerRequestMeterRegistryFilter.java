@@ -16,13 +16,10 @@
 package io.micronaut.configuration.metrics.binder.web;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micronaut.configuration.metrics.annotation.RequiresMetrics;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.MutableHttpResponse;
-import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.HttpServerFilter;
 import io.micronaut.http.filter.ServerFilterChain;
 import io.micronaut.http.uri.UriMatchTemplate;
@@ -31,7 +28,6 @@ import io.micronaut.web.router.UriRouteMatch;
 import jakarta.inject.Provider;
 import org.reactivestreams.Publisher;
 import java.util.Optional;
-import static io.micronaut.core.util.StringUtils.FALSE;
 
 /**
  * Registers the timers and meters for each request.
@@ -42,11 +38,9 @@ import static io.micronaut.core.util.StringUtils.FALSE;
  * @author Christian Oestreich
  * @author graemerocher
  * @since 1.0
+ * @deprecated Internal use only, replaced by a new implementation
  */
-@Filter("${micronaut.metrics.http.path:/**}")
-@RequiresMetrics
-@Requires(property = WebMetricsPublisher.ENABLED, notEquals = FALSE)
-@Requires(condition = WebMetricsServerCondition.class)
+@Deprecated(forRemoval = true, since = "5.9")
 public class ServerRequestMeterRegistryFilter implements HttpServerFilter {
 
     private static final String ATTRIBUTE_KEY = "micronaut.filter." + ServerRequestMeterRegistryFilter.class.getSimpleName();
@@ -79,7 +73,7 @@ public class ServerRequestMeterRegistryFilter implements HttpServerFilter {
         String path = resolvePath(request);
         Optional<Boolean> attribute = request.getAttribute(ATTRIBUTE_KEY, Boolean.class);
         boolean reportErrors = attribute.isPresent();
-        if (!attribute.isPresent()) {
+        if (attribute.isEmpty()) {
             request.setAttribute(ATTRIBUTE_KEY, true);
         }
         return new WebMetricsPublisher<>(
@@ -87,7 +81,7 @@ public class ServerRequestMeterRegistryFilter implements HttpServerFilter {
             meterRegistryProvider.get(),
             path,
             start,
-            request.getMethod().toString(),
+            request.getMethodName(),
             reportErrors,
             reportClientErrorURIs
         );

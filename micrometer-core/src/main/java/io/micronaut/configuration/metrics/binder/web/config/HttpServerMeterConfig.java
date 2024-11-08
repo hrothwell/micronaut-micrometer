@@ -17,11 +17,21 @@ package io.micronaut.configuration.metrics.binder.web.config;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-import static io.micronaut.configuration.metrics.micrometer.MeterRegistryFactory.MICRONAUT_METRICS_BINDERS;
-
 /**
  * Http server meter configuration.
+ *
  * @since 5.6.0
  */
-@ConfigurationProperties(MICRONAUT_METRICS_BINDERS + ".web.server")
-public class HttpServerMeterConfig extends HttpMeterConfig { }
+@ConfigurationProperties(HttpServerMeterConfig.PATH)
+public class HttpServerMeterConfig extends HttpMeterConfig {
+
+    /**
+     * To config path.
+     */
+    public static final String PATH = HttpMetricsConfig.PATH + ".server";
+
+    /**
+     * The metric.
+     */
+    public static final String REQUESTS_METRIC = "http.server.requests";
+}

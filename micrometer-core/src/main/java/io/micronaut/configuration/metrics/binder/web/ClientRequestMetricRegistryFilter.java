@@ -16,13 +16,10 @@
 package io.micronaut.configuration.metrics.binder.web;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micronaut.configuration.metrics.annotation.RequiresMetrics;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpAttributes;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MutableHttpRequest;
-import io.micronaut.http.annotation.Filter;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
 import jakarta.inject.Provider;
@@ -30,7 +27,6 @@ import org.reactivestreams.Publisher;
 
 import java.util.Optional;
 
-import static io.micronaut.core.util.StringUtils.FALSE;
 import static io.micronaut.http.HttpAttributes.URI_TEMPLATE;
 
 /**
@@ -38,11 +34,9 @@ import static io.micronaut.http.HttpAttributes.URI_TEMPLATE;
  *
  * @author graemerocher
  * @since 1.0
+ * @deprecated Internal use only, replaced by a new implementation
  */
-@Filter("${micronaut.metrics.http.client.path:/**}")
-@RequiresMetrics
-@Requires(property = WebMetricsPublisher.ENABLED, notEquals = FALSE)
-@Requires(condition = WebMetricsClientCondition.class)
+@Deprecated(forRemoval = true, since = "5.9")
 public class ClientRequestMetricRegistryFilter implements HttpClientFilter {
 
     private final Provider<MeterRegistry> meterRegistryProvider;
@@ -64,7 +58,7 @@ public class ClientRequestMetricRegistryFilter implements HttpClientFilter {
                 meterRegistryProvider.get(),
                 resolvePath(request),
                 start,
-                request.getMethod().toString(),
+                request.getMethodName(),
                 false,
                 resolveServiceID(request),
                 true,
