@@ -27,6 +27,8 @@ import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.configuration.metrics.aggregator.AbstractMethodTagger;
 import io.micronaut.configuration.metrics.annotation.MetricOptions;
 import io.micronaut.configuration.metrics.annotation.RequiresMetrics;
+import io.micronaut.configuration.metrics.condition.MetricCondition;
+import io.micronaut.configuration.metrics.condition.MetricConditionTrue;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.TypeHint;
@@ -34,6 +36,7 @@ import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.order.OrderUtil;
 import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.runtime.Micronaut;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.HdrHistogram.ConcurrentHistogram;
@@ -52,6 +55,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
 
 import static io.micronaut.core.annotation.AnnotationMetadata.VALUE_MEMBER;
 
@@ -123,8 +127,13 @@ public class TimedInterceptor implements MethodInterceptor<Object, Object> {
     public Object intercept(MethodInvocationContext<Object, Object> context) {
         final AnnotationMetadata metadata = context.getAnnotationMetadata();
         final AnnotationValue<TimedSet> timedSet = metadata.getAnnotation(TimedSet.class);
-        if (timedSet != null) {
+
+        final List<Class<? extends MetricCondition>> conditionClasses = Arrays.asList(metadata.classValues(MetricOptions.class, "conditions"));
+        final Stream<MetricCondition> conditions = conditionClasses.stream().map(MetricCondition::getInstance);
+
+        if (timedSet != null && conditions.allMatch(c -> c.matches(context))) {
             final List<AnnotationValue<Timed>> timedAnnotations = timedSet.getAnnotations(VALUE_MEMBER, Timed.class);
+
             if (!timedAnnotations.isEmpty()) {
 
                 String exceptionClass = "none";

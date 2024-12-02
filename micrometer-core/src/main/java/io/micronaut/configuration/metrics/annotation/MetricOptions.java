@@ -16,7 +16,10 @@
 package io.micronaut.configuration.metrics.annotation;
 
 import io.micronaut.configuration.metrics.aggregator.AbstractMethodTagger;
+import io.micronaut.configuration.metrics.condition.MetricCondition;
+import io.micronaut.configuration.metrics.condition.MetricConditionTrue;
 import io.micronaut.core.annotation.Experimental;
+import io.micronaut.core.annotation.InstantiatedMember;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -46,4 +49,12 @@ public @interface MetricOptions {
      * @return whether to filter taggers using {@link #taggers()} array
      */
     boolean filterTaggers() default false;
+
+
+    /**
+     * @return array of {@link io.micronaut.configuration.metrics.condition.MetricCondition} that determines if this metric should be
+     * created and published
+     */
+    @InstantiatedMember
+    Class<? extends MetricCondition>[] conditions() default { MetricConditionTrue.class };
 }
