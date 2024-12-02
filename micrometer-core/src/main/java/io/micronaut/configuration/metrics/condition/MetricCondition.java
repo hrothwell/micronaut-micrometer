@@ -39,7 +39,7 @@ public interface MetricCondition extends Predicate<MethodInvocationContext> {
             return clazz.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             // TODO logger
-            return null;
+            return MetricConditionFalse.INSTANCE;
         }
     }
 }
