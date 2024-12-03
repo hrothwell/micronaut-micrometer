@@ -55,6 +55,8 @@ public @interface MetricOptions {
     /**
      * Evaluated expression that can be used to indicate whether the metric should be processed.
      * Will be evaluated each time the method is called, and if the condition evaluates to false the metric will not be published.
+     * Evaluated using {@link io.micronaut.configuration.metrics.util.MetricOptionsUtil}
+     *
      * @see <a href="https://docs.micronaut.io/latest/guide/#evaluatedExpressions">Evaluated Expressions</a>.
      * @return The condition
      */

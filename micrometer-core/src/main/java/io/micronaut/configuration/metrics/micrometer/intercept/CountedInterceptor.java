@@ -25,6 +25,7 @@ import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.configuration.metrics.aggregator.AbstractMethodTagger;
 import io.micronaut.configuration.metrics.annotation.MetricOptions;
 import io.micronaut.configuration.metrics.annotation.RequiresMetrics;
+import io.micronaut.configuration.metrics.util.MetricOptionsUtil;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.publisher.Publishers;
@@ -95,7 +96,7 @@ public class CountedInterceptor implements MethodInterceptor<Object, Object> {
     public Object intercept(MethodInvocationContext<Object, Object> context) {
         final AnnotationMetadata metadata = context.getAnnotationMetadata();
         final String metricName = metadata.stringValue(Counted.class).orElse(DEFAULT_METRIC_NAME);
-        final boolean conditionMet = context.booleanValue(MetricOptions.class, MetricOptions.MEMBER_CONDITION).orElse(true);
+        final boolean conditionMet = MetricOptionsUtil.evaluateCondition(context);
 
         if (StringUtils.isNotEmpty(metricName) && conditionMet) {
             InterceptedMethod interceptedMethod = InterceptedMethod.of(context, conversionService);

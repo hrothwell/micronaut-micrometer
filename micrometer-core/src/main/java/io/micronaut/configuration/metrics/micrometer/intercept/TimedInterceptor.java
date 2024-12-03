@@ -27,6 +27,7 @@ import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.configuration.metrics.aggregator.AbstractMethodTagger;
 import io.micronaut.configuration.metrics.annotation.MetricOptions;
 import io.micronaut.configuration.metrics.annotation.RequiresMetrics;
+import io.micronaut.configuration.metrics.util.MetricOptionsUtil;
 import io.micronaut.core.annotation.AnnotationMetadata;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.TypeHint;
@@ -123,7 +124,7 @@ public class TimedInterceptor implements MethodInterceptor<Object, Object> {
     public Object intercept(MethodInvocationContext<Object, Object> context) {
         final AnnotationMetadata metadata = context.getAnnotationMetadata();
         final AnnotationValue<TimedSet> timedSet = metadata.getAnnotation(TimedSet.class);
-        final boolean conditionMet = context.booleanValue(MetricOptions.class, MetricOptions.MEMBER_CONDITION).orElse(true);
+        final boolean conditionMet = MetricOptionsUtil.evaluateCondition(context);
 
         if (timedSet != null && conditionMet) {
             final List<AnnotationValue<Timed>> timedAnnotations = timedSet.getAnnotations(VALUE_MEMBER, Timed.class);
