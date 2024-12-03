@@ -123,14 +123,12 @@ public class TimedInterceptor implements MethodInterceptor<Object, Object> {
     public Object intercept(MethodInvocationContext<Object, Object> context) {
         final AnnotationMetadata metadata = context.getAnnotationMetadata();
         final AnnotationValue<TimedSet> timedSet = metadata.getAnnotation(TimedSet.class);
-
         final boolean conditionMet = context.booleanValue(MetricOptions.class, MetricOptions.MEMBER_CONDITION).orElse(true);
 
         if (timedSet != null && conditionMet) {
             final List<AnnotationValue<Timed>> timedAnnotations = timedSet.getAnnotations(VALUE_MEMBER, Timed.class);
 
             if (!timedAnnotations.isEmpty()) {
-
                 String exceptionClass = "none";
                 List<Timer.Sample> syncInvokeSamples = null;
                 InterceptedMethod interceptedMethod = InterceptedMethod.of(context, conversionService);
