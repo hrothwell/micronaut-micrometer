@@ -95,7 +95,9 @@ public class CountedInterceptor implements MethodInterceptor<Object, Object> {
     public Object intercept(MethodInvocationContext<Object, Object> context) {
         final AnnotationMetadata metadata = context.getAnnotationMetadata();
         final String metricName = metadata.stringValue(Counted.class).orElse(DEFAULT_METRIC_NAME);
-        if (StringUtils.isNotEmpty(metricName)) {
+        final boolean conditionMet = context.booleanValue(MetricOptions.class, "condition").orElse(true);
+
+        if (StringUtils.isNotEmpty(metricName) && conditionMet) {
             InterceptedMethod interceptedMethod = InterceptedMethod.of(context, conversionService);
             try {
                 InterceptedMethod.ResultType resultType = interceptedMethod.resultType();

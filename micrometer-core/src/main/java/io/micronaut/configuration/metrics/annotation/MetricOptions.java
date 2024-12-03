@@ -16,10 +16,7 @@
 package io.micronaut.configuration.metrics.annotation;
 
 import io.micronaut.configuration.metrics.aggregator.AbstractMethodTagger;
-import io.micronaut.configuration.metrics.condition.MetricCondition;
-import io.micronaut.configuration.metrics.condition.MetricConditionTrue;
 import io.micronaut.core.annotation.Experimental;
-import io.micronaut.core.annotation.InstantiatedMember;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -50,11 +47,11 @@ public @interface MetricOptions {
      */
     boolean filterTaggers() default false;
 
-
     /**
-     * @return array of {@link io.micronaut.configuration.metrics.condition.MetricCondition} that determines if this metric should be
-     * created and published
+     * Evaluated expression that can be used to indicate whether the metric should be processed.
+     * Will be evaluated each time the method is called, and if the condition evaluates to false the metric will not be published.
+     * @see <a href="https://docs.micronaut.io/latest/guide/#evaluatedExpressions">Evaluated Expressions</a>.
+     * @return The condition
      */
-    @InstantiatedMember
-    Class<? extends MetricCondition>[] conditions() default { MetricConditionTrue.class };
+    String condition() default "";
 }
