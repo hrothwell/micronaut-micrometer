@@ -36,6 +36,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target({METHOD})
 public @interface MetricOptions {
+
+    String MEMBER_TAGGERS = "taggers";
+    String MEMBER_FILTER_TAGGERS = "filterTaggers";
+    String MEMBER_CONDITION = "condition";
+
     /**
      * @return array of {@link io.micronaut.configuration.metrics.aggregator.AbstractMethodTagger} to apply to metrics for method.
      * Only utilized for filtering if {@link #filterTaggers()} is true

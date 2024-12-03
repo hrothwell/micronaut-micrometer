@@ -95,7 +95,7 @@ public class CountedInterceptor implements MethodInterceptor<Object, Object> {
     public Object intercept(MethodInvocationContext<Object, Object> context) {
         final AnnotationMetadata metadata = context.getAnnotationMetadata();
         final String metricName = metadata.stringValue(Counted.class).orElse(DEFAULT_METRIC_NAME);
-        final boolean conditionMet = context.booleanValue(MetricOptions.class, "condition").orElse(true);
+        final boolean conditionMet = context.booleanValue(MetricOptions.class, MetricOptions.MEMBER_CONDITION).orElse(true);
 
         if (StringUtils.isNotEmpty(metricName) && conditionMet) {
             InterceptedMethod interceptedMethod = InterceptedMethod.of(context, conversionService);
@@ -153,8 +153,8 @@ public class CountedInterceptor implements MethodInterceptor<Object, Object> {
     }
 
     private void doCount(AnnotationMetadata metadata, String metricName, @Nullable Throwable e, MethodInvocationContext<Object, Object> context) {
-        List<Class<? extends AbstractMethodTagger>> taggers = Arrays.asList(metadata.classValues(MetricOptions.class, "taggers"));
-        boolean filter = metadata.booleanValue(MetricOptions.class, "filterTaggers").orElse(false);
+        List<Class<? extends AbstractMethodTagger>> taggers = Arrays.asList(metadata.classValues(MetricOptions.class, MetricOptions.MEMBER_TAGGERS));
+        boolean filter = metadata.booleanValue(MetricOptions.class, MetricOptions.MEMBER_FILTER_TAGGERS).orElse(false);
         Counter.builder(metricName)
                 .tags(
                     methodTaggers.isEmpty() ? Collections.emptyList() :

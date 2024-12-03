@@ -124,7 +124,7 @@ public class TimedInterceptor implements MethodInterceptor<Object, Object> {
         final AnnotationMetadata metadata = context.getAnnotationMetadata();
         final AnnotationValue<TimedSet> timedSet = metadata.getAnnotation(TimedSet.class);
 
-        final boolean conditionMet = context.booleanValue(MetricOptions.class, "condition").orElse(true);
+        final boolean conditionMet = context.booleanValue(MetricOptions.class, MetricOptions.MEMBER_CONDITION).orElse(true);
 
         if (timedSet != null && conditionMet) {
             final List<AnnotationValue<Timed>> timedAnnotations = timedSet.getAnnotations(VALUE_MEMBER, Timed.class);
@@ -220,8 +220,8 @@ public class TimedInterceptor implements MethodInterceptor<Object, Object> {
             final String description = metadata.stringValue("description").orElse(null);
             final String[] tags = metadata.stringValues("extraTags");
             final AnnotationMetadata annotationMetadata = context.getAnnotationMetadata();
-            final List<Class<? extends AbstractMethodTagger>> taggers = Arrays.asList(annotationMetadata.classValues(MetricOptions.class, "taggers"));
-            final boolean filter = annotationMetadata.booleanValue(MetricOptions.class, "filterTaggers").orElse(false);
+            final List<Class<? extends AbstractMethodTagger>> taggers = Arrays.asList(annotationMetadata.classValues(MetricOptions.class, MetricOptions.MEMBER_TAGGERS));
+            final boolean filter = annotationMetadata.booleanValue(MetricOptions.class, MetricOptions.MEMBER_FILTER_TAGGERS).orElse(false);
             final double[] percentiles = metadata.doubleValues("percentiles");
             final boolean histogram = metadata.isTrue("histogram");
             final Timer timer = Timer.builder(metricName)
