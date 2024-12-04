@@ -37,8 +37,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD})
 public @interface MetricOptions {
 
+    /**
+     * Constant value to relate to annotation's tagger values
+     */
     String MEMBER_TAGGERS = "taggers";
+
+    /**
+     * Constant value to relate to annotation's filterTaggers value
+     */
     String MEMBER_FILTER_TAGGERS = "filterTaggers";
+
+    /**
+     * Constant value to relate to annotation's condition value
+     */
     String MEMBER_CONDITION = "condition";
 
     /**
@@ -59,6 +70,7 @@ public @interface MetricOptions {
      *
      * @see <a href="https://docs.micronaut.io/latest/guide/#evaluatedExpressions">Evaluated Expressions</a>.
      * @return The condition
+     * @since 5.10.0
      */
     String condition() default "";
 }

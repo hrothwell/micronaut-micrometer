@@ -17,6 +17,7 @@ package io.micronaut.configuration.metrics.util;
 
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.configuration.metrics.annotation.MetricOptions;
+import io.micronaut.core.expressions.EvaluatedExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,17 +27,25 @@ import org.slf4j.LoggerFactory;
  * @since 5.10.0
  * @author Haiden Rothwell
  */
-public class MetricOptionsUtil {
+final public class MetricOptionsUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(MetricOptionsUtil.class);
 
+    /**
+     * Evaluates the condition ({@link EvaluatedExpression}) contained
+     * within the {@link MethodInvocationContext}'s {@link MetricOptions} annotation.
+     * If no condition is present, the default value of true is returned.
+     *
+     * @param context {@link MethodInvocationContext} to evaluate for
+     * @return condition's result
+     */
     public static boolean evaluateCondition(MethodInvocationContext<?, ?> context) {
         if (!context.isPresent(MetricOptions.class, MetricOptions.MEMBER_CONDITION)) {
             return true;
         }
         boolean expressionResult = context.booleanValue(MetricOptions.class, MetricOptions.MEMBER_CONDITION).orElse(false);
-        if (!expressionResult && LOG.isDebugEnabled()) {
-            LOG.debug("MetricOptions condition evaluated to false for invocation: {}", context);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("MetricOptions condition evaluated to {} for invocation: {}", expressionResult, context);
         }
         return expressionResult;
     }
