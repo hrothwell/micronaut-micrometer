@@ -38,17 +38,17 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface MetricOptions {
 
     /**
-     * Constant value to relate to annotation's tagger values
+     * Constant value to relate to annotation's tagger values.
      */
     String MEMBER_TAGGERS = "taggers";
 
     /**
-     * Constant value to relate to annotation's filterTaggers value
+     * Constant value to relate to annotation's filterTaggers value.
      */
     String MEMBER_FILTER_TAGGERS = "filterTaggers";
 
     /**
-     * Constant value to relate to annotation's condition value
+     * Constant value to relate to annotation's condition value.
      */
     String MEMBER_CONDITION = "condition";
 

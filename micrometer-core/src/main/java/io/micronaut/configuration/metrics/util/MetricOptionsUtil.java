@@ -32,8 +32,7 @@ final public class MetricOptionsUtil {
     private static final Logger LOG = LoggerFactory.getLogger(MetricOptionsUtil.class);
 
     /**
-     * Evaluates the condition ({@link EvaluatedExpression}) contained
-     * within the {@link MethodInvocationContext}'s {@link MetricOptions} annotation.
+     * Evaluates the condition ({@link EvaluatedExpression}) contained within the {@link MethodInvocationContext}'s {@link MetricOptions} annotation.
      * If no condition is present, the default value of true is returned.
      *
      * @param context {@link MethodInvocationContext} to evaluate for
